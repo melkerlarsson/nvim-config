@@ -46,34 +46,34 @@ return {
             local lspconfig = require("lspconfig")
 
 
-            local jdtls_path = "/usr/local/opt/jdtls/libexec"
-            local jdtls_launcher =
-            "/usr/local/opt/jdtls/libexec/plugins/org.eclipse.equinox.launcher_1.7.0.v20250424-1814.jar" -- jdtls_path .. "plugins/org.eclipse.equinox.launcher_1.7.0.v20250424-1814.jar"
-            local jdtls_config = jdtls_path .. "/config_mac"
+           
+            local jdtls_path = vim.fn.expand("~/.local/share/jdtls")
+            local jdtls_launcher = vim.fn.glob(jdtls_path .. "/plugins/org.eclipse.equinox.launcher_*.jar")
+            local jdtls_config = jdtls_path .. "/config_linux"
 
             local root_markers = { "build.gradle", "settings.gradle", ".git" }
             local root_dir = require("lspconfig.util").root_pattern(unpack(root_markers))(vim.fn.getcwd())
 
             lspconfig.jdtls.setup({
                 cmd = {
-                    "java",
-                    "-Declipse.application=org.eclipse.jdt.ls.core.id1",
-                    "-Dosgi.bundles.defaultStartLevel=4",
-                    "-Declipse.product=org.eclipse.jdt.ls.core.product",
-                    "-Dlog.protocol=true",
-                    "-Dlog.level=ALL",
-                    "-Xms1g",
-                    "--add-modules=ALL-SYSTEM",
-                    "--add-opens", "java.base/java.util=ALL-UNNAMED",
-                    "--add-opens", "java.base/java.lang=ALL-UNNAMED",
-                    "-jar", vim.fn.glob(jdtls_launcher),
-                    "-configuration", jdtls_config,
-                    "-data", vim.fn.stdpath("cache") .. "/jdtls-workspace/" .. vim.fn.fnamemodify(root_dir, ":p:h:t"),
-                },
-                capabilities = capabilities,
-                on_attach = on_attach,
-                root_dir = root_dir,
-            })
+        "java",
+        "-Declipse.application=org.eclipse.jdt.ls.core.id1",
+        "-Dosgi.bundles.defaultStartLevel=4",
+        "-Declipse.product=org.eclipse.jdt.ls.core.product",
+        "-Dlog.protocol=true",
+        "-Dlog.level=ALL",
+        "-Xms1g",
+        "--add-modules=ALL-SYSTEM",
+        "--add-opens", "java.base/java.util=ALL-UNNAMED",
+        "--add-opens", "java.base/java.lang=ALL-UNNAMED",
+        "-jar", jdtls_launcher,
+        "-configuration", jdtls_config,
+        "-data", vim.fn.stdpath("cache") .. "/jdtls-workspace/" .. vim.fn.fnamemodify(root_dir, ":p:h:t"),
+    },
+    capabilities = capabilities,
+    on_attach = on_attach,
+    root_dir = root_dir,
+})
 
 
             lspconfig.lua_ls.setup({
